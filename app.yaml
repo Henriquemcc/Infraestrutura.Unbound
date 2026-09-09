@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unbound-app
+spec:
+  selector:
+    matchLabels:
+      app: unbound-app
+  template:
+    metadata:
+      labels:
+        app: unbound-app
+    spec:
+      containers:
+      - name: unbound
+        image: docker.io/henriquemcc/unbound
+        ports:
+        - containerPort: 53
