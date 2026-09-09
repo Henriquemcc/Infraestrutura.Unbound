@@ -11,9 +11,19 @@ spec:
       labels:
         app: unbound-app
     spec:
+      securityContext:
+        fsGroup: 100
       containers:
       - name: unbound
         image: docker.io/henriquemcc/unbound
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 100
+          runAsGroup: 100
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         resources:
           requests:
             cpu: 100m
@@ -23,3 +33,14 @@ spec:
             memory: 256Mi
         ports:
         - containerPort: 53
+          name: dns-udp
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        volumeMounts:
+        - name: unbound-data
+          mountPath: /var/lib/unbound
+      volumes:
+      - name: unbound-data
+        emptyDir: {}
