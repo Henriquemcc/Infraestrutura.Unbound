@@ -5,3 +5,4 @@ resources:
   - Deployment.yaml
   - HorizontalPodAutoscale.yaml
   - LoadBalancer.yaml
+  - Allow-Internet.yaml
