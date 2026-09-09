@@ -21,6 +21,6 @@ RUN chmod +x /entrypoint.sh
 RUN mkdir -p /var/lib/unbound
 RUN chown -R unbound:unbound /etc/unbound /var/lib/unbound
 
-EXPOSE 53/udp 853/tcp 443/tcp
+EXPOSE 53/udp 53/tcp
 
 CMD ["/entrypoint.sh"]
