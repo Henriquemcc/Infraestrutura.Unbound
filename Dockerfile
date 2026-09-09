@@ -1,26 +1,25 @@
 FROM alpine
 
 # Instalando requisitos
-RUN apk add --no-cache unbound drill ca-certificates openssl certbot
+RUN apk add --no-cache unbound curl ca-certificates
 
-# Baixando o root hints
-WORKDIR /etc/unbound
-ADD https://www.internic.net/domain/named.root root.hints
-RUN chmod 777 root.hints
+# Usando RUN curl em vez de ADD URL
+RUN mkdir -p /etc/unbound && \
+    curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.root
 
 # Copiando arquivo de configuração
-WORKDIR /etc/unbound
-COPY unbound.conf unbound.conf
+COPY unbound.conf /etc/unbound/unbound.conf
 
 # Copiando Entrypoint
-WORKDIR /
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Definindo permissões corretas
-RUN mkdir -p /var/lib/unbound
-RUN chown -R unbound:unbound /etc/unbound /var/lib/unbound
+# Criando diretório e definindo usuário (best practice)
+RUN mkdir -p /var/lib/unbound && \
+    chown -R unbound:unbound /etc/unbound /var/lib/unbound
 
-EXPOSE 53/udp 853/tcp 443/tcp
+EXPOSE 53/udp 53/tcp
 
+# Mudando para o usuário não-root
+USER unbound
 CMD ["/entrypoint.sh"]
