@@ -1,6 +1,6 @@
 services:
   unbound:
     build: .
-    restart: always
+    restart: "no"
     container_name: unbound
     hostname: unbound
