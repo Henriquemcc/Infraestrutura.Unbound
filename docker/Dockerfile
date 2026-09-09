@@ -18,10 +18,8 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Definindo permissões corretas
-RUN mkdir -p /var/lib/unbound && chown -R unbound:unbound /etc/unbound /var/lib/unbound
-
-# O Unbound precisa gravar o trust anchor em /var/lib/unbound
-USER unbound
+RUN mkdir -p /var/lib/unbound
+RUN chown -R unbound:unbound /etc/unbound /var/lib/unbound
 
 EXPOSE 53/udp 53/tcp
 
