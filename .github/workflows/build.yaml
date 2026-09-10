@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Build
 
 on:
   push:
@@ -41,20 +41,3 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_NAME }}:latest
-
-  deploy:
-    if: github.event_name == 'push'
-    needs: build
-    runs-on: [self-hosted, linux, arm64]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Apply Kubernetes manifests
-        run: kubectl apply -k ./k8s
-
-      - name: Update deployment image
-        run: kubectl set image deployment/unbound-deployment unbound="$IMAGE_NAME:$IMAGE_TAG"
-
-      - name: Wait for rollout
-        run: kubectl rollout status deployment/unbound-deployment --timeout=180s
